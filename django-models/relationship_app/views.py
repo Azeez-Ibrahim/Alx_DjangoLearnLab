@@ -3,6 +3,7 @@ from .models import Library, Book
 from django.views.generic.detail import DetailView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 
 # Create your views here.
 def list_books(request):
@@ -25,7 +26,8 @@ def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            login(request, user)  # Log in the user after registration
             return redirect('login')
     else:
         form = UserCreationForm()
